@@ -6,5 +6,5 @@ import { Logic } from './logic';
 const logic = new Logic();
 
 document.getElementById('start')!.onclick = () => {
-  logic.start((document.getElementById('ai') as HTMLTextAreaElement).value);
+  logic.start();
 };

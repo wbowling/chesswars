@@ -7,7 +7,8 @@ import { AI } from './ai';
 import { UI } from './ui';
 
 export class Logic {
-  private worker?: Worker;
+  private playerWorker?: Worker;
+  private compWorker?: Worker;
 
   private game: ChessInstance;
   private board: ChessBoardInstance;
@@ -26,10 +27,14 @@ export class Logic {
     this.ui = new UI(this.game);
   }
 
-  start(workerAI: string) {
+  start() {
+    const playerAI = this.ui.getPlayerAI();
+    const compAI = this.ui.getCompAI();
+
     this.game.reset();
     this.board.start(true);
-    this.worker = AI.createAIWorker(workerAI);
+    this.playerWorker = AI.createAIWorker(playerAI);
+    this.compWorker = AI.createAIWorker(compAI);
     this.nextMove();
   }
 
@@ -42,8 +47,8 @@ export class Logic {
 
     const move =
       this.game.turn() === 'b'
-        ? AI.getRandomMove(this.game)
-        : await AI.getAIMove(this.worker!, this.game);
+        ? await AI.getAIMove(this.compWorker!, this.game)
+        : await AI.getAIMove(this.playerWorker!, this.game);
     this.game.move(move);
     this.board.position(this.game.fen());
   }
