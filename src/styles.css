@@ -1,0 +1,8 @@
+body {
+  font-family: 'Source Code Pro', monospace;
+}
+
+textarea {
+  font-size: 13px;
+  min-height: 30rem;
+}

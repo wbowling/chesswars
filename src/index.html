@@ -1,33 +1,73 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
+
     <title>Chesswars</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+      integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU="
+      crossorigin="anonymous"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap"
+      rel="stylesheet"
+    />
+
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
       crossorigin="anonymous"
     ></script>
-    <script
-      src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"
-      integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD"
-      crossorigin="anonymous"
-    ></script>
+
     <link
       rel="stylesheet"
-      href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css"
-      integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU"
+      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
+      integrity="sha256-2YQRJMXD7pIAPHiXr0s+vlRWA7GYJEK0ARns7k2sbHY="
       crossorigin="anonymous"
     />
+
+    <link rel="stylesheet" href="styles.css" />
   </head>
 
   <body>
-    <div id="myBoard" style="width: 400px"></div>
-    <div>Current player - <span id="player">w</span></div>
-    <div>Status - <span id="status"></span></div>
+    <div class="container">
+      <div class="row">
+        <div class="twelve columns">
+          <h2>Chesswars</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="five columns">
+          <div id="myBoard"></div>
+        </div>
+        <div class="seven columns">
+          <label for="ai">AI Code</label>
+          <textarea class="u-full-width" id="ai"></textarea>
+          <select id="loadAi">
+            <option value="">Load an AI</option>
+            <option value="random">Random</option>
+            <option value="local">Local Storage</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          Current player: <strong><span id="player">White</span></strong>
+        </div>
+        <div>
+          Status: <strong><span id="status">None</span></strong>
+        </div>
+      </div>
+      <div class="row">
+        <button class="button-primary" id="start">Start</button>
+      </div>
+    </div>
 
-    <textarea cols="150" rows="20" id="ai"></textarea>
-    <hr />
-    <button id="start">Start</button>
     <script src="app.ts"></script>
   </body>
 </html>

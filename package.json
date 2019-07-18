@@ -12,18 +12,19 @@
     "clean": "gts clean",
     "compile": "tsc -p .",
     "fix": "gts fix",
-    "prepare": "yarn run compile",
-    "pretest": "yarn run compile",
-    "posttest": "yarn run check"
+    "deploy": "firebase deploy"
   },
   "dependencies": {
+    "@chrisoakman/chessboardjs": "^1.0.0",
     "@types/chessboardjs": "^0.3.1",
     "chess.js": "^0.10.2",
+    "jquery": "^3.4.1",
     "parcel-plugin-asset-copier": "^1.0.0",
     "typescript": "^3.5.3"
   },
   "devDependencies": {
     "@types/chess.js": "^0.10.0",
+    "@types/jquery": "^3.3.30",
     "gts": "^1.0.0",
     "parcel": "^1.12.3",
     "prettier": "^1.18.2",
