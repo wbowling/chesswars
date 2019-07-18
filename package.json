@@ -12,7 +12,7 @@
     "clean": "gts clean",
     "compile": "tsc -p .",
     "fix": "gts fix",
-    "deploy": "firebase deploy"
+    "deploy": "yarn build && firebase deploy"
   },
   "dependencies": {
     "@chrisoakman/chessboardjs": "^1.0.0",
