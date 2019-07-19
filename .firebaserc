@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "chesswars-4bbea"
+    "default": "chesswars-4bbea",
+    "chesswars": "chesswars-4bbea"
   }
 }

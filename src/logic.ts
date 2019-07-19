@@ -13,6 +13,7 @@ export class Logic {
   private game: ChessInstance;
   private board: ChessBoardInstance;
   private ui: UI;
+
   constructor() {
     const config = {
       position: 'start',
@@ -45,11 +46,17 @@ export class Logic {
       return;
     }
 
-    const move =
-      this.game.turn() === 'b'
-        ? await AI.getAIMove(this.compWorker!, this.game)
-        : await AI.getAIMove(this.playerWorker!, this.game);
-    this.game.move(move);
-    this.board.position(this.game.fen());
+    try {
+      const move =
+        this.game.turn() === 'b'
+          ? await AI.getAIMove(this.compWorker!, this.game)
+          : await AI.getAIMove(this.playerWorker!, this.game);
+      if (!this.game.move(move)) {
+        throw new Error('Invalid move');
+      }
+      this.board.position(this.game.fen());
+    } catch (e) {
+      this.ui.invalid_move();
+    }
   }
 }

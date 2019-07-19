@@ -5,7 +5,7 @@
   "author": "William Bowling <will@wbowling.info>",
   "license": "MIT",
   "scripts": {
-    "build": "parcel build ./src/index.html",
+    "build": "gts check && tsc -p . --noEmit && parcel build ./src/index.html",
     "dev": "parcel serve ./src/index.html",
     "watch": "parcel watch ./src/index.html",
     "check": "gts check",
@@ -16,20 +16,20 @@
   },
   "dependencies": {
     "@chrisoakman/chessboardjs": "^1.0.0",
-    "@types/chessboardjs": "^0.3.1",
     "chess.js": "^0.10.2",
-    "jquery": "^3.4.1",
-    "parcel-plugin-asset-copier": "^1.0.0",
-    "typescript": "^3.5.3"
+    "firebase": "^6.3.0",
+    "jquery": "^3.4.1"
   },
   "devDependencies": {
+    "@types/chessboardjs": "^0.3.1",
     "@types/chess.js": "^0.10.0",
     "@types/jquery": "^3.3.30",
     "gts": "^1.0.0",
     "parcel": "^1.12.3",
     "prettier": "^1.18.2",
     "tslint": "^5.18.0",
-    "typescript": "~3.4.0"
+    "parcel-plugin-asset-copier": "^1.0.0",
+    "typescript": "^3.5.3"
   },
   "assetsPath": "assets"
 }

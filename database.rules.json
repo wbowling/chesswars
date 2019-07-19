@@ -1,6 +1,13 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
+    "codes": {
+      "${uid}": {
+        ".read": "auth.uid != null",
+        ".write": "auth.uid == uid"
+      }
+    },
+
+    ".read": "auth.uid != null",
+    ".write": "auth.uid != null"
   }
 }
