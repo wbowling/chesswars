@@ -1,9 +1,9 @@
 {
   "rules": {
     "codes": {
-      "${uid}": {
+      "$uid": {
         ".read": "auth.uid != null",
-        ".write": "auth.uid == uid"
+        ".write": "auth.uid == $uid"
       }
     },
 
