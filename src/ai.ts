@@ -4,8 +4,10 @@ export class AI {
     const workerSrc = `
           self.importScripts("https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js");
           ${workerAI}
-          self.onmessage = ({ data: { fen } }) => {
-            self.postMessage(getMove(new Chess(fen)));
+          self.onmessage = ({ data: { pgn } }) => {
+            const chess = new Chess();
+            chess.load_pgn(pgn);
+            self.postMessage(getMove(chess));
           }`;
     const workerBlob = new Blob([workerSrc], { type: 'text/javascript' });
     const workerBlobUrl = URL.createObjectURL(workerBlob);
@@ -14,13 +16,13 @@ export class AI {
   }
 
   static async getAIMove(worker: Worker, game: ChessInstance): Promise<string> {
-    const fen = game.fen();
+    const pgn = game.pgn();
     const possibleMoves = game.moves();
     const move: string = await new Promise((resolve, reject) => {
       worker.onmessage = event => {
         resolve(event.data);
       };
-      worker.postMessage({ fen });
+      worker.postMessage({ pgn });
       setTimeout(() => reject('Timed out'), 1000);
     });
 

@@ -15,18 +15,18 @@ export class Logic {
   private ui: UI;
   private onMoveEnd: () => void = () => {};
 
-  constructor() {
-    const config = {
-      position: 'start',
-      onMoveEnd: () => {
-        this.onMoveEnd();
-      },
-      moveSpeed: 75,
-    };
+  config = {
+    position: 'start',
+    onMoveEnd: () => {
+      this.onMoveEnd();
+    },
+    moveSpeed: 75,
+  };
 
+  constructor() {
     this.game = new Chess();
-    this.board = Chessboard('myBoard', config);
-    this.ui = new UI(this.game);
+    this.board = Chessboard('myBoard', this.config);
+    this.ui = new UI(this.game, this);
   }
 
   async start() {
@@ -72,5 +72,11 @@ export class Logic {
     } catch (e) {
       return false;
     }
+  }
+
+  rebuild() {
+    this.board.destroy();
+    this.board = Chessboard('myBoard', this.config);
+    this.board.position(this.game.fen(), false);
   }
 }

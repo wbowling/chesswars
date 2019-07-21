@@ -1,3 +1,4 @@
+import { Logic } from './logic';
 import { ChessInstance } from 'chess.js';
 import { db } from './db';
 import CodeMirror = require('codemirror');
@@ -7,11 +8,10 @@ import '../node_modules/codemirror/mode/javascript/javascript';
 export class UI {
   private statusEl: HTMLElement;
   private playerEl: HTMLElement;
-  // private aiEl: HTMLTextAreaElement;
   private compAiEl: HTMLSelectElement;
   private editor: CodeMirror.EditorFromTextArea;
 
-  constructor(private game: ChessInstance) {
+  constructor(private game: ChessInstance, private logic: Logic) {
     this.statusEl = document.getElementById('status')!;
     this.playerEl = document.getElementById('player')!;
     this.compAiEl = document.getElementById('compAi') as HTMLSelectElement;
@@ -20,40 +20,49 @@ export class UI {
       lineNumbers: true,
       mode: 'javascript',
     });
+
+    document.getElementById('speed')!.onchange = event => {
+      const speed = (event.target as HTMLInputElement).value;
+      this.logic.config.moveSpeed = Number(speed);
+      this.logic.rebuild();
+    };
+
     document.getElementById('save')!.onclick = () => {
       db.saveAi(this.editor.getValue());
     };
 
-    db.watchAis((vals: { [key: string]: string }) => {
-      if (!vals) {
-        vals = {};
-      }
-      this.storesAis = {};
-      const selected = this.compAiEl.value || 'random';
+    db.watchAis(vals => this.aisUpdated(vals));
+  }
 
-      this.compAiEl.innerHTML = '';
-      const user = db.app.auth().currentUser;
-      if (user && !vals[user.uid]) {
-        vals[user.uid] = RANDOM_AI;
-      }
+  aisUpdated(vals: { [key: string]: string }) {
+    if (!vals) {
+      vals = {};
+    }
+    this.storesAis = {};
+    const selected = this.compAiEl.value || 'random';
 
-      for (const k of Object.keys(vals)) {
-        const opt = document.createElement('option');
-        if (user && user.uid === k) {
-          opt.value = k;
-          opt.appendChild(document.createTextNode('Your AI'));
-          this.editor.setValue(vals[k]);
-        } else {
-          opt.value = k;
-          opt.appendChild(document.createTextNode(k));
-        }
-        if (opt.value === selected) {
-          opt.selected = true;
-        }
-        this.compAiEl.appendChild(opt);
-        this.storesAis[k] = vals[k];
+    this.compAiEl.innerHTML = '';
+    const user = db.app.auth().currentUser;
+    if (user && !vals[user.uid]) {
+      vals[user.uid] = RANDOM_AI;
+    }
+
+    for (const k of Object.keys(vals)) {
+      const opt = document.createElement('option');
+      if (user && user.uid === k) {
+        opt.value = k;
+        opt.appendChild(document.createTextNode('Your AI'));
+        this.editor.setValue(vals[k]);
+      } else {
+        opt.value = k;
+        opt.appendChild(document.createTextNode(k));
       }
-    });
+      if (opt.value === selected) {
+        opt.selected = true;
+      }
+      this.compAiEl.appendChild(opt);
+      this.storesAis[k] = vals[k];
+    }
   }
 
   invalid_move() {
