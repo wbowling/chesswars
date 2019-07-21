@@ -40,7 +40,7 @@ export class Logic {
     await this.gameLoop();
   }
 
-  async gameLoop(hidden = true) {
+  async gameLoop(hidden = false) {
     this.ui.update_status();
 
     let running = true;
