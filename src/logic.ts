@@ -13,12 +13,13 @@ export class Logic {
   private game: ChessInstance;
   private board: ChessBoardInstance;
   private ui: UI;
+  private onMoveEnd: () => void = () => {};
 
   constructor() {
     const config = {
       position: 'start',
       onMoveEnd: () => {
-        this.nextMove();
+        this.onMoveEnd();
       },
       moveSpeed: 75,
     };
@@ -28,7 +29,7 @@ export class Logic {
     this.ui = new UI(this.game);
   }
 
-  start() {
+  async start() {
     const playerAI = this.ui.getPlayerAI();
     const compAI = this.ui.getCompAI();
 
@@ -36,27 +37,40 @@ export class Logic {
     this.board.start(true);
     this.playerWorker = AI.createAIWorker(playerAI);
     this.compWorker = AI.createAIWorker(compAI);
-    this.nextMove();
+    await this.gameLoop();
+  }
+
+  async gameLoop(hidden = true) {
+    this.ui.update_status();
+
+    let running = true;
+    do {
+      if (!(await this.nextMove())) {
+        this.ui.invalid_move();
+        running = false;
+      } else {
+        if (!hidden) {
+          await new Promise(resolve => {
+            this.onMoveEnd = resolve;
+            this.board.position(this.game.fen());
+          });
+        }
+        this.ui.update_status();
+        running = !this.game.game_over();
+      }
+    } while (running);
+    this.board.position(this.game.fen());
   }
 
   async nextMove() {
-    this.ui.update_status();
-
-    if (this.game.game_over()) {
-      return;
-    }
-
     try {
       const move =
         this.game.turn() === 'b'
           ? await AI.getAIMove(this.compWorker!, this.game)
           : await AI.getAIMove(this.playerWorker!, this.game);
-      if (!this.game.move(move)) {
-        throw new Error('Invalid move');
-      }
-      this.board.position(this.game.fen());
+      return this.game.move(move);
     } catch (e) {
-      this.ui.invalid_move();
+      return false;
     }
   }
 }
